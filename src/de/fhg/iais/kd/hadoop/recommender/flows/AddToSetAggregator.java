@@ -5,12 +5,13 @@ import cascading.operation.Aggregator;
 import cascading.operation.AggregatorCall;
 import cascading.operation.BaseOperation;
 import cascading.tuple.Fields;
+import cascading.tuple.Tuple;
 import cascading.tuple.TupleEntry;
 import de.ex1.UserSet;
 
 public class AddToSetAggregator extends
-BaseOperation<AddToSetAggregator.Context> implements
-Aggregator<AddToSetAggregator.Context> {
+		BaseOperation<AddToSetAggregator.Context> implements
+		Aggregator<AddToSetAggregator.Context> {
 
 	public AddToSetAggregator(Fields fields) {
 		super(1, fields); // one input field, output fields named as in
@@ -24,7 +25,7 @@ Aggregator<AddToSetAggregator.Context> {
 			set = new UserSet();
 		}
 
-		public UserSet getSet() {
+		public UserSet getUserSet() {
 			return set;
 		}
 	}
@@ -32,6 +33,7 @@ Aggregator<AddToSetAggregator.Context> {
 	@Override
 	public void start(FlowProcess flowProcess,
 			AggregatorCall<Context> aggregatorCall) {
+
 		Context context = new Context();
 		aggregatorCall.setContext(context);
 	}
@@ -41,14 +43,18 @@ Aggregator<AddToSetAggregator.Context> {
 			AggregatorCall<Context> aggregatorCall) {
 		TupleEntry arguments = aggregatorCall.getArguments();
 		Context context = aggregatorCall.getContext();
-		context.getSet().add(arguments.getString("uid"));
+		context.getUserSet().add(arguments.getString("uid"));
 	}
 
 	@Override
 	public void complete(FlowProcess flowProcess,
 			AggregatorCall<Context> aggregatorCall) {
-		// TODO Auto-generated method stub
+		Context context = aggregatorCall.getContext();
+		Tuple result = new Tuple();
 
+		result.add(context.getUserSet());
+
+		aggregatorCall.getOutputCollector().add(result);
 	}
 
 }

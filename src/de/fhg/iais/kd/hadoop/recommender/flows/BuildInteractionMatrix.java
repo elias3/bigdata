@@ -9,6 +9,7 @@ import cascading.flow.FlowConnector;
 import cascading.flow.hadoop.HadoopFlowConnector;
 import cascading.operation.Aggregator;
 import cascading.pipe.Each;
+import cascading.pipe.Every;
 import cascading.pipe.GroupBy;
 import cascading.pipe.Pipe;
 import cascading.property.AppProps;
@@ -22,7 +23,7 @@ import de.fhg.iais.kd.hadoop.recommender.functions.ProjectToFields;
 
 public class BuildInteractionMatrix {
 
-	private static final String DELIMITER = "|";
+	private static final String DELIMITER = ", ";
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Flow getInteractionMatrixFlow(String infile, String outfile) {
@@ -44,7 +45,7 @@ public class BuildInteractionMatrix {
 		Pipe pipe = new Pipe("listenEvts");
 
 		// Filter out empty mbids
-		Fields targetFields = new Fields("uid", "artist_mbid", "artist_name");
+		Fields targetFields = new Fields("artist_name", "uid");
 		ProjectToFields projector = new ProjectToFields(targetFields);
 		pipe = new Each(pipe, targetFields, projector);
 
@@ -52,7 +53,10 @@ public class BuildInteractionMatrix {
 
 		Aggregator addToSet = new AddToSetAggregator(new Fields("uid"));
 
+		pipe = new Every(pipe, addToSet);
+
 		Properties properties = new Properties();
+
 		AppProps.setApplicationJarClass(properties,
 				BuildInteractionMatrix.class);
 

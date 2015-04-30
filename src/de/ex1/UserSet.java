@@ -33,8 +33,30 @@ public class UserSet {
 		return (double) intersectionSize / unionSize;
 	}
 
-	private Set<String> getSet() {
+	public Set<String> getSet() {
 		return userSet;
+	}
+
+	@Override
+	public String toString() {
+
+		int i = 0;
+		String str = "";
+
+		str += "[";
+
+		for (String user : this.userSet) {
+			if (i < this.userSet.size() - 1) {
+				str += user + ", ";
+			} else {
+				str += user;
+			}
+			i++;
+		}
+
+		str += "]";
+
+		return str;
 	}
 
 	public static void main(String[] args) {
