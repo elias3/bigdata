@@ -21,7 +21,7 @@ import cascading.tap.hadoop.Hfs;
 import cascading.tuple.Fields;
 import de.fhg.iais.kd.hadoop.recommender.functions.ProjectToFields;
 
-public class BuildInteractionMatrix {
+public class UserSetClusterFlow {
 
 	private static final String DELIMITER = ", ";
 
@@ -39,7 +39,7 @@ public class BuildInteractionMatrix {
 
 		Scheme outputSehema = new TextDelimited(false, DELIMITER);
 
-		Tap matrix = new Hfs(outputSehema, outputPath + "/matrix",
+		Tap matrix = new Hfs(outputSehema, outputPath + "/ex5",
 				SinkMode.REPLACE);
 
 		Pipe pipe = new Pipe("listenEvts");
@@ -51,14 +51,16 @@ public class BuildInteractionMatrix {
 
 		pipe = new GroupBy(pipe, new Fields("artist_name"));
 
-		Aggregator addToSet = new FindClosestClusterAggregator(new Fields("uid"));
+		Aggregator addToSet = new AddToMatrixSetAggregator(new Fields("uid"));
 
 		pipe = new Every(pipe, addToSet);
 
+		Aggregator userSetCluster = new FindClosestClusterAggregator(
+				new Fields("uid"));
+
 		Properties properties = new Properties();
 
-		AppProps.setApplicationJarClass(properties,
-				BuildInteractionMatrix.class);
+		AppProps.setApplicationJarClass(properties, UserSetClusterFlow.class);
 
 		FlowConnector flowConnector = new HadoopFlowConnector(properties);
 		// FlowConnector flowConnector = new HadoopFlowConnector();

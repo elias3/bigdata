@@ -10,7 +10,7 @@ public class UserSetClusterModel {
 				.readFromCsvResource("resources/centers_1000_iter_2_50.csv");
 	}
 
-	String findClosestCluster(UserSetMatrix userset) {
+	public String findClosestCluster(UserSetMatrix userset) {
 
 		double smallestDistance = 1.0;
 		String smallestKey = "";
