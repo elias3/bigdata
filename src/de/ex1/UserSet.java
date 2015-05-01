@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class UserSet {
 
-	private Set<String> userSet = null;
+	protected Set<String> userSet = null;
 
 	public UserSet() {
 		userSet = new HashSet<String>();
@@ -30,7 +30,7 @@ public class UserSet {
 			}
 		}
 
-		return (double) intersectionSize / unionSize;
+		return 1.0 - (double) intersectionSize / unionSize;
 	}
 
 	public Set<String> getSet() {

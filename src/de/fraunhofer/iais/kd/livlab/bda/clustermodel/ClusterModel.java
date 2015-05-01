@@ -20,7 +20,6 @@ public class ClusterModel implements Serializable {
 
 	public Set<String> getKeys() {
 		return map.keySet();
-
 	}
 
 }

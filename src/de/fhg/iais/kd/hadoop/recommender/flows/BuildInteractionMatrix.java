@@ -51,7 +51,7 @@ public class BuildInteractionMatrix {
 
 		pipe = new GroupBy(pipe, new Fields("artist_name"));
 
-		Aggregator addToSet = new AddToSetAggregator(new Fields("uid"));
+		Aggregator addToSet = new AddToMatrixSetAggregator(new Fields("uid"));
 
 		pipe = new Every(pipe, addToSet);
 
