@@ -51,7 +51,8 @@ public class BuildInteractionMatrix {
 
 		pipe = new GroupBy(pipe, new Fields("artist_name"));
 
-		Aggregator addToSet = new FindClosestClusterAggregator(new Fields("uid"));
+		Aggregator addToSet = new FindClosestClusterAggregator(
+				new Fields("uid"));
 
 		pipe = new Every(pipe, addToSet);
 
@@ -71,4 +72,101 @@ public class BuildInteractionMatrix {
 		return flow;
 
 	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static Flow getInteractionMatrixFlowTask2(String infile,
+			String outfile) {
+
+		String inputPath = infile;
+		String outputPath = outfile;
+
+		// define source and sink Taps.
+		Fields sourceFields = new Fields("uid", "datetime", "artist_mbid",
+				"artist_name", "track_mbid", "track_name");
+		Scheme sourceScheme = new TextDelimited(sourceFields);
+		Tap source = new Hfs(sourceScheme, inputPath);
+
+		Scheme outputSehema = new TextDelimited(false, DELIMITER);
+
+		Tap matrix = new Hfs(outputSehema, outputPath + "/matrix",
+				SinkMode.REPLACE);
+
+		Pipe pipe = new Pipe("listenEvts");
+
+		// Filter out empty mbids
+		Fields targetFields = new Fields("artist_name", "uid");
+		ProjectToFields projector = new ProjectToFields(targetFields);
+		pipe = new Each(pipe, targetFields, projector);
+
+		pipe = new GroupBy(pipe, new Fields("artist_name"));
+
+		Aggregator addToSet = new AddToSetAggregator(new Fields("uid"));
+
+		pipe = new Every(pipe, addToSet);
+
+		Properties properties = new Properties();
+
+		AppProps.setApplicationJarClass(properties,
+				BuildInteractionMatrix.class);
+
+		FlowConnector flowConnector = new HadoopFlowConnector(properties);
+		// FlowConnector flowConnector = new HadoopFlowConnector();
+
+		Map<String, Tap> endPoints = new HashMap<>();
+		endPoints.put("listenEvts", matrix);
+
+		Flow flow = flowConnector.connect("uitlityMatrix", source, endPoints,
+				pipe);
+		return flow;
+
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static Flow getInteractionMatrixFlowTask3(String infile,
+			String outfile) {
+
+		String inputPath = infile;
+		String outputPath = outfile;
+
+		// define source and sink Taps.
+		Fields sourceFields = new Fields("uid", "datetime", "artist_mbid",
+				"artist_name", "track_mbid", "track_name");
+		Scheme sourceScheme = new TextDelimited(sourceFields);
+		Tap source = new Hfs(sourceScheme, inputPath);
+
+		Scheme outputSehema = new TextDelimited(false, DELIMITER);
+
+		Tap matrix = new Hfs(outputSehema, outputPath + "/matrix",
+				SinkMode.REPLACE);
+
+		Pipe pipe = new Pipe("listenEvts");
+
+		// Filter out empty mbids
+		Fields targetFields = new Fields("artist_name", "uid");
+		ProjectToFields projector = new ProjectToFields(targetFields);
+		pipe = new Each(pipe, targetFields, projector);
+
+		pipe = new GroupBy(pipe, new Fields("artist_name"));
+
+		Aggregator addToSet = new AddToMatrixSetAggregator(new Fields("uid"));
+
+		pipe = new Every(pipe, addToSet);
+
+		Properties properties = new Properties();
+
+		AppProps.setApplicationJarClass(properties,
+				BuildInteractionMatrix.class);
+
+		FlowConnector flowConnector = new HadoopFlowConnector(properties);
+		// FlowConnector flowConnector = new HadoopFlowConnector();
+
+		Map<String, Tap> endPoints = new HashMap<>();
+		endPoints.put("listenEvts", matrix);
+
+		Flow flow = flowConnector.connect("uitlityMatrix", source, endPoints,
+				pipe);
+		return flow;
+
+	}
+
 }

@@ -25,21 +25,6 @@ public class UserSetClusterModel {
 				smallestDistance = distance;
 			}
 
-			// for (String value2 : values) {
-
-			// if (value2.compareTo("1") == 0) {
-			// String num = Integer.toString(i);
-			// String user = "user_";
-			// int numZeros = 6 - num.length();
-			// for (int j = 0; j < numZeros; j++) {
-			// user += "0";
-			// }
-			// user += num;
-			// set.add(user);
-			// }
-			// userset.distanceTo(set);
-			// i++;
-			// }
 		}
 		return smallestKey;
 	}
