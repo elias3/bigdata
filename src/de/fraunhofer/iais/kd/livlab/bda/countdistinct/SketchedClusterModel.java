@@ -47,16 +47,16 @@ public class SketchedClusterModel {
 			String userarray) {
 
 		if (userarray.length() == 2001) { // csv model 0,0,1,1, ... for 1000
-											// users (including user_000)
+			// users (including user_000)
 
 			for (int id = 1; id <= 1000; id++) {
 
 				if (userarray.charAt(2 * id) == '1') {
 					String uid = "user_" + String.format("%06d", id); // transform
-																		// id 1
-																		// to
-																		// user_001
-																		// etc.
+					// id 1
+					// to
+					// user_001
+					// etc.
 					sketch.add(uid);
 				}
 			}

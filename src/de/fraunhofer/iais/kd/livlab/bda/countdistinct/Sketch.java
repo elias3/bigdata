@@ -14,6 +14,7 @@ public class Sketch implements Serializable {
 
 		this.sketchsize = sketchsize;
 		sketch = new BitSet();
+
 		// this.sketch = new BitSet(sketchsize);
 
 	}
@@ -44,7 +45,7 @@ public class Sketch implements Serializable {
 
 	public Sketch orSketch(Sketch sketch) {
 
-		(this.sketch).or(sketch.getSketch());
+		this.sketch.or(sketch.getSketch());
 
 		Sketch newSketch = new Sketch(sketchsize);
 		newSketch.setSketch(this.sketch);
@@ -63,7 +64,7 @@ public class Sketch implements Serializable {
 	public Sketch copy() {
 
 		Sketch sketchCopy = new Sketch(sketchsize);
-		sketchCopy.setSketch((BitSet) (sketch.clone()));
+		sketchCopy.setSketch((BitSet) sketch.clone());
 
 		return sketchCopy;
 
@@ -71,7 +72,8 @@ public class Sketch implements Serializable {
 
 	@Override
 	public String toString() {
-		return ("Sketch [sketchsize:" + sketchsize + ", " + sketch.toString() + "]");
+		return "Sketch [sketchsize:" + sketchsize + ", " + sketch.toString()
+				+ "]";
 	}
 
 	public int cardinality() {
