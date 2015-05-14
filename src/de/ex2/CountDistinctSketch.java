@@ -18,7 +18,7 @@ public class CountDistinctSketch {
 	}
 
 	public int getEstimate() {
-		int m = sketch.getSketch().length();
+		int m = MAX_HASH_SIZE;// sketch.getSketch().length();
 		int us = m - sketch.cardinality();
 		// System.out.println("m  = " + m + " us = " + us);
 		double result = -((double) m) * Math.log((double) us / (double) m);

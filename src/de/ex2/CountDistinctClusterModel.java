@@ -5,6 +5,8 @@ import de.fraunhofer.iais.kd.livlab.bda.clustermodel.ClusterModelFactory;
 
 public class CountDistinctClusterModel {
 
+	private static final int NUM_OF_USERS = 10;
+
 	public String getClosest(CountDistinctSketch sketch) {
 		double minimalDistance = 1.0;
 		String closestString = "";
@@ -17,7 +19,7 @@ public class CountDistinctClusterModel {
 				// users (including user_000)
 				CountDistinctSketch otherSketch = new CountDistinctSketch();
 
-				for (int id = 1; id <= 1000; id++) {
+				for (int id = 1; id <= NUM_OF_USERS; id++) {
 
 					if (vector.charAt(2 * id) == '1') {
 						String uid = "user_" + String.format("%06d", id); // transform
